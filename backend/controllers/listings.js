@@ -11,11 +11,9 @@ module.exports.showListing = async (req, res) => {
     const listing = await Listing.findById(id)
         .populate({
             path: "reviews",
-            populate: {
-                path: "author",
-            },
-        })
-        .populate("owner");
+            // Remove populate author since it is now a String ID
+        });
+        // Remove populate owner
     if(!listing) {
         return res.status(404).json({ success: false, message: "Listing not found" });
     }
@@ -26,7 +24,9 @@ module.exports.createListing = async (req, res, next) => {
     let url = req.file.path;
     let filename = req.file.filename;
     const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id;
+    newListing.owner = req.auth.userId; // Clerk ID
+    newListing.ownerName = req.body.listing.ownerName; // Provided by frontend
+    newListing.ownerAvatar = req.body.listing.ownerAvatar;
     newListing.image = { url, filename };
     await newListing.save();
     res.status(201).json({ success: true, listing: newListing, message: "New Listing Created!" });

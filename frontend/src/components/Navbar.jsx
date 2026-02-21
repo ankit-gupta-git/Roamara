@@ -1,99 +1,65 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { SignedIn, SignedOut, UserButton, useUser, SignInButton } from "@clerk/clerk-react";
+import { MagnifyingGlassIcon, GlobeAltIcon, Bars3Icon, UserCircleIcon } from "@heroicons/react/24/outline";
 
-const Navbar = ({ isHomePage }) => {
-  const { user, logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-  };
-
-  const navbarClasses = isHomePage
-    ? "fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-md border-b border-white/20"
-    : "bg-white border-b border-gray-200 sticky top-0 z-50";
-
-  const textClasses = isHomePage
-    ? "text-white hover:text-pink-200"
-    : "text-gray-700 hover:text-gray-900";
-
-  const buttonClasses = isHomePage
-    ? "bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
-    : "bg-red-500 text-white hover:bg-red-600";
+const Navbar = () => {
+  const { user } = useUser();
 
   return (
-    <nav className={`${navbarClasses} transition-all duration-300`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link
-              to="/"
-              className="flex items-center group"
-            >
-              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-red-500 to-pink-500 rounded-full mr-3 group-hover:scale-110 transition-transform">
-                <i className="fa-regular fa-compass text-white text-lg"></i>
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 h-20 flex items-center">
+      <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4 w-full">
+        <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-1 group">
+            <div className="text-airbnb-primary">
+              <svg 
+                viewBox="0 0 32 32" 
+                xmlns="http://www.w3.org/2000/svg" 
+                aria-hidden="true" 
+                role="presentation" 
+                focusable="false" 
+                className="block h-8 w-8 fill-current"
+              >
+                <path d="M16 1c2.008 0 3.463.963 4.751 3.269l.533 1.025c1.954 3.83 6.114 12.54 7.1 14.836l.145.353c.667 1.591.91 2.472.96 3.396l.01.415.001.228c0 4.062-2.877 6.478-6.357 6.478-2.224 0-4.556-1.258-6.709-3.386l-.257-.26-.172-.179h-.011l-.176.185c-2.044 2.1-4.393 3.42-6.413 3.613l-.272.017-.234.004c-3.48 0-6.358-2.416-6.358-6.478 0-1.266.388-2.464 1.114-3.874l.117-.22 7.101-14.836c1.288-2.306 2.743-3.269 4.751-3.269zm0 2.667c-1.117 0-2.008.566-2.903 2.221l-.037.073L5.942 20.812c-.52.934-.809 1.776-.809 2.655 0 2.486 1.745 3.811 3.784 3.811 1.417 0 2.955-.845 4.622-2.523l.311-.328c.453-.483.92-.483 1.373 0l.332.352c1.7 1.724 3.235 2.5 4.622 2.5 2.039 0 3.784-1.325 3.784-3.811 0-.879-.289-1.721-.806-2.651l-.042-.077L18.94 5.961c-.895-1.655-1.786-2.221-2.903-2.221l-.037.073zM16 9c2.206 0 4 1.794 4 4 0 2.206-1.794 4-4 4s-4-1.794-4-4c0-2.206 1.794-4 4-4zm0 2.667c-1.117 0-2.008.566-2.903 2.221l-.037.073L10.375 20.812c-.52.934-.809 1.776-.809 2.655 0 2.486 1.745 3.811 3.784 3.811 1.417 0 2.955-.845 4.622-2.523l.311-.328c.453-.483.92-.483 1.373 0l.332.352c1.7 1.724 3.235 2.5 4.622 2.5 2.039 0 3.784-1.325 3.784-3.811 0-.879-.289-1.721-.806-2.651l-.042-.077L18.94 5.961c-.895-1.655-1.786-2.221-2.903-2.221z"></path>
+              </svg>
+            </div>
+            <span className="text-airbnb-primary text-xl font-bold hidden md:block">roamara</span>
+          </Link>
+
+          {/* Search Pill */}
+          <div className="border w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer">
+            <div className="flex flex-row items-center justify-between">
+              <div className="text-sm font-semibold px-6 border-x flex-1 text-center">
+                Anywhere
               </div>
-              <span className={`text-xl font-bold ${isHomePage ? 'text-white' : 'text-gray-900'} group-hover:text-red-500 transition-colors`}>
-                Roamara
-              </span>
-            </Link>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-8">
-            <Link
-              to="/listings"
-              className={`${textClasses} px-3 py-2 rounded-md text-sm font-medium transition-colors hover:scale-105 transform`}
-            >
-              Explore
-            </Link>
-
-            {user ? (
-              <>
-                <Link
-                  to="/listings/new"
-                  className={`${buttonClasses} px-4 py-2 rounded-full text-sm font-medium transition-all hover:scale-105 shadow-lg`}
-                >
-                  <i className="fas fa-plus mr-2"></i>
-                  Rent Home
-                </Link>
-                <div className="flex items-center space-x-4">
-                  <span className={`${isHomePage ? 'text-white' : 'text-gray-700'} text-sm`}>
-                    Welcome, {user.username}
-                  </span>
-                  <button
-                    onClick={handleLogout}
-                    className={`${textClasses} px-3 py-2 rounded-md text-sm font-medium transition-colors hover:scale-105`}
-                  >
-                    <i className="fas fa-sign-out-alt mr-1"></i>
-                    Logout
-                  </button>
+              <div className="hidden sm:block text-sm font-semibold px-6 border-r flex-1 text-center">
+                Any Week
+              </div>
+              <div className="text-sm pl-6 pr-2 text-gray-600 flex flex-row items-center gap-3">
+                <div className="hidden sm:block">Add Guests</div>
+                <div className="p-2 bg-airbnb-primary rounded-full text-white">
+                  <MagnifyingGlassIcon className="w-4 h-4" />
                 </div>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/signup"
-                  className={`${textClasses} px-3 py-2 rounded-md text-sm font-medium transition-colors hover:scale-105`}
-                >
-                  Sign Up
-                </Link>
-                <Link
-                  to="/login"
-                  className={`${buttonClasses} px-4 py-2 rounded-full text-sm font-medium transition-all hover:scale-105 shadow-lg`}
-                >
-                  Login
-                </Link>
-              </>
-            )}
+              </div>
+            </div>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              type="button"
-              className={`${isHomePage ? 'text-white' : 'text-gray-700'} hover:text-red-500 p-2`}
-            >
-              <i className="fas fa-bars"></i>
-            </button>
+          {/* User Menu */}
+          <div className="flex flex-row items-center gap-3">
+            <div className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+              Roamara your home
+            </div>
+            <div className="p-4 md:py-1 md:px-2 border border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
+              <Bars3Icon className="w-5 h-5" />
+              <div className="hidden md:block">
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
+                <SignedOut>
+                  <UserCircleIcon className="w-8 h-8 text-gray-500" />
+                </SignedOut>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,30 @@
+```css
+:root {
+  --airbnb-primary: #ff385c;
+  --airbnb-secondary: #008489;
+  --airbnb-gray: #717171;
+  --airbnb-black: #222222;
+  --airbnb-border: #dddddd;
+  --airbnb-bg: #ffffff;
+  --airbnb-hover: #f7f7f7;
+}
+
+@theme {
+  --color-airbnb-primary: var(--airbnb-primary);
+  --color-airbnb-secondary: var(--airbnb-secondary);
+  --color-airbnb-gray: var(--airbnb-gray);
+  --color-airbnb-black: var(--airbnb-black);
+  --color-airbnb-border: var(--airbnb-border);
+  --color-airbnb-bg: var(--airbnb-bg);
+  --color-airbnb-hover: var(--airbnb-hover);
+}
+
 @import "tailwindcss";
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--airbnb-black);
+  background-color: var(--airbnb-bg);
 }
 
 /* star rating CSS ok hai */

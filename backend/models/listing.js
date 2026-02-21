@@ -22,9 +22,11 @@ const listingSchema = new Schema({
         },
     ],
     owner: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+        type: String, // Clerk User ID
+        required: true,
     },
+    ownerName: String,
+    ownerAvatar: String,
 });
 
 listingSchema.post("findOneAndDelete", async (listing) => {

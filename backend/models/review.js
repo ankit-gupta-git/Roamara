@@ -19,9 +19,10 @@ const reviewSchema = new Schema({
         },
     ],
     author: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+        type: String, // Clerk User ID
     },
+    authorName: String,
+    authorAvatar: String,
 });
 
 module.exports = mongoose.model("Review", reviewSchema);

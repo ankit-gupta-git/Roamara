@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+// import { AuthProvider } from './context/AuthContext'; // Removed for Clerk
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -9,6 +9,7 @@ import CreateListing from './pages/CreateListing';
 import EditListing from './pages/EditListing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import MyBookings from './pages/MyBookings';
 import PrivateRoute from './components/PrivateRoute';
 
 function AppContent() {
@@ -33,6 +34,11 @@ function AppContent() {
               <EditListing />
             </PrivateRoute>
           } />
+          <Route path="/bookings" element={
+            <PrivateRoute>
+              <MyBookings />
+            </PrivateRoute>
+          } />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
@@ -44,11 +50,9 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AuthProvider>
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 

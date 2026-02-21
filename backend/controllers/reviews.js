@@ -9,7 +9,9 @@ module.exports.createReview = async (req, res) => {
     }
 
     let newReview = new Review(req.body.review);
-    newReview.author = req.user._id;
+    newReview.author = req.auth.userId; // Clerk User ID
+    newReview.authorName = req.body.review.authorName;
+    newReview.authorAvatar = req.body.review.authorAvatar;
     listing.reviews.push(newReview);
 
     await newReview.save();

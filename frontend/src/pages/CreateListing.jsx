@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useUser, useAuth } from "@clerk/clerk-react";
 
 const CreateListing = () => {
   const navigate = useNavigate();
+  const { user } = useUser();
+  const { getToken } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -32,12 +35,19 @@ const CreateListing = () => {
     setError('');
 
     try {
+      const token = await getToken();
       const submitData = new FormData();
       submitData.append('listing[title]', formData.title);
       submitData.append('listing[description]', formData.description);
       submitData.append('listing[location]', formData.location);
       submitData.append('listing[country]', formData.country);
       submitData.append('listing[price]', formData.price);
+      
+      // Add user details
+      if (user) {
+          submitData.append('listing[ownerName]', user.firstName || user.username);
+          submitData.append('listing[ownerAvatar]', user.imageUrl);
+      }
 
       if (image) {
         submitData.append('listing[image]', image);
@@ -45,7 +55,8 @@ const CreateListing = () => {
 
       const response = await axios.post('http://localhost:8080/api/listings', submitData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         }
       });
 
