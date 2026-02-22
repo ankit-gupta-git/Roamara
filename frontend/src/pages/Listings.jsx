@@ -13,7 +13,8 @@ const Listings = () => {
 
   const fetchListings = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/listings');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+      const response = await axios.get(`${backendUrl}/api/listings`);
       setListings(response.data.listings);
       setLoading(false);
     } catch (err) {

@@ -51,7 +51,8 @@ const CreateListing = () => {
         submitData.append('listing[image]', image);
       }
 
-      const response = await axios.post('http://localhost:8080/api/listings', submitData, {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+      const response = await axios.post(`${backendUrl}/api/listings`, submitData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`

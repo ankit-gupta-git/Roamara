@@ -25,7 +25,8 @@ const EditListing = () => {
 
   const fetchListing = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/listings/${id}`);
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+      const response = await axios.get(`${backendUrl}/api/listings/${id}`);
       const listing = response.data.listing;
       setFormData({
         title: listing.title || '',
@@ -69,7 +70,8 @@ const EditListing = () => {
         submitData.append('listing[image]', image);
       }
 
-      await axios.put(`http://localhost:8080/api/listings/${id}`, submitData, {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+      await axios.put(`${backendUrl}/api/listings/${id}`, submitData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`

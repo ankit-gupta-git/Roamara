@@ -34,7 +34,8 @@ const Home = () => {
 
   const fetchListings = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/listings');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+      const response = await axios.get(`${backendUrl}/api/listings`);
       if (response.data.listings && response.data.listings.length > 0) {
         setListings(response.data.listings);
       }
