@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { SignedIn, SignedOut, UserButton, useUser, SignInButton } from "@clerk/clerk-react";
+import { useAuth } from "../context/AuthContext";
 import { MagnifyingGlassIcon, GlobeAltIcon, Bars3Icon, UserCircleIcon } from "@heroicons/react/24/outline";
 
 const Navbar = () => {
-  const { user } = useUser();
+  const { user, logout } = useAuth();
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 h-20 flex items-center">
@@ -47,12 +47,26 @@ const Navbar = () => {
             <div className="p-4 md:py-1 md:px-2 border border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
               <Bars3Icon className="w-5 h-5" />
               <div className="hidden md:block">
-                <SignedIn>
-                  <UserButton afterSignOutUrl="/" />
-                </SignedIn>
-                <SignedOut>
-                  <UserCircleIcon className="w-8 h-8 text-gray-500" />
-                </SignedOut>
+                {user ? (
+                  <div className="flex items-center gap-3">
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.username} className="w-8 h-8 rounded-full border border-gray-200" />
+                    ) : (
+                      <UserCircleIcon className="w-8 h-8 text-gray-500" />
+                    )}
+                    <button 
+                      onClick={logout}
+                      className="text-sm font-semibold hover:text-airbnb-primary transition cursor-pointer"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <Link to="/login" className="flex items-center gap-1">
+                    <UserCircleIcon className="w-8 h-8 text-gray-500" />
+                    <span className="text-sm font-semibold">Login</span>
+                  </Link>
+                )}
               </div>
             </div>
           </div>

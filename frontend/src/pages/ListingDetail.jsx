@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth } from "../context/AuthContext";
 import { StarIcon, ShareIcon, HeartIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 import BookingForm from '../components/BookingForm';
@@ -10,8 +10,7 @@ import { mockListings } from '../mockData';
 const ListingDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useUser();
-  const { getToken } = useAuth();
+  const { user, token } = useAuth();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,7 +42,6 @@ const ListingDetail = () => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this listing?')) {
       try {
-        const token = await getToken();
         await axios.delete(`${import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"}/api/listings/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -59,12 +57,11 @@ const ListingDetail = () => {
     setSubmittingReview(true);
 
     try {
-      const token = await getToken();
       await axios.post(`${import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"}/api/listings/${id}/reviews`, {
         review: {
             ...newReview,
-            authorName: user.firstName || user.username,
-            authorAvatar: user.imageUrl
+            authorName: user.username,
+            authorAvatar: user.avatar
         }
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -81,7 +78,6 @@ const ListingDetail = () => {
   const handleDeleteReview = async (reviewId) => {
     if (window.confirm('Are you sure you want to delete this review?')) {
       try {
-        const token = await getToken();
         await axios.delete(`${import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"}/api/listings/${id}/reviews/${reviewId}`, {
              headers: { Authorization: `Bearer ${token}` }
         });

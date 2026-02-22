@@ -7,14 +7,13 @@ const app = express();
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const cors = require("cors");
-const { clerkMiddleware } = require('@clerk/express'); // Clerk Middleware
-
-// Models (User model not needed forAuth anymore if strictly using Clerk, but keeping if refs exist elsewhere, though we removed refs)
-// const User = require("./models/user.js"); 
+const passport = require("passport");
+const authRouter = require("./routes/auth.js");
 
 const listingRouter = require("./routes/listings.js");
 const reviewRouter = require("./routes/reviews.js");
-const bookingRouter = require("./routes/bookings.js"); // New Booking Routes
+const bookingRouter = require("./routes/bookings.js");
+const userRouter = require("./routes/users.js");
 
 const dbUrl = process.env.ATLASDB_URL;
 
@@ -37,18 +36,15 @@ app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(express.json());
 
-// Clerk Middleware - Adds auth state to req
-app.use(clerkMiddleware()); 
+// Initialize Passport
+app.use(passport.initialize());
 
-app.get("/", (req, res) => {
-    res.redirect("/api/listings");
-});
-
-// API Routes
+// Routes
+app.use("/api/auth", authRouter);
 app.use("/api/listings", listingRouter);
 app.use("/api/listings/:id/reviews", reviewRouter);
 app.use("/api/bookings", bookingRouter);
-// app.use("/api/users", userRouter); // Removed - Clerk handles auth
+app.use("/api/users", userRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

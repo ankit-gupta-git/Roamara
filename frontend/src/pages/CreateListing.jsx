@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useUser, useAuth } from "@clerk/clerk-react";
+import { useAuth } from "../context/AuthContext";
 
 const CreateListing = () => {
   const navigate = useNavigate();
-  const { user } = useUser();
-  const { getToken } = useAuth();
+  const { user, token } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -35,7 +34,6 @@ const CreateListing = () => {
     setError('');
 
     try {
-      const token = await getToken();
       const submitData = new FormData();
       submitData.append('listing[title]', formData.title);
       submitData.append('listing[description]', formData.description);
@@ -45,8 +43,8 @@ const CreateListing = () => {
       
       // Add user details
       if (user) {
-          submitData.append('listing[ownerName]', user.firstName || user.username);
-          submitData.append('listing[ownerAvatar]', user.imageUrl);
+          submitData.append('listing[ownerName]', user.username);
+          submitData.append('listing[ownerAvatar]', user.avatar);
       }
 
       if (image) {

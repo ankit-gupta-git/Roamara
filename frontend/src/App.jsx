@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-// import { AuthProvider } from './context/AuthContext'; // Removed for Clerk
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -9,6 +8,7 @@ import CreateListing from './pages/CreateListing';
 import EditListing from './pages/EditListing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AuthSuccess from './pages/AuthSuccess';
 import MyBookings from './pages/MyBookings';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -41,6 +41,7 @@ function AppContent() {
           } />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/auth-success" element={<AuthSuccess />} />
         </Routes>
       </main>
       <Footer />

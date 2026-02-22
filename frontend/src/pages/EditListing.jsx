@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from "../context/AuthContext";
 
 const EditListing = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { token } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -69,7 +71,8 @@ const EditListing = () => {
 
       await axios.put(`http://localhost:8080/api/listings/${id}`, submitData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         }
       });
 

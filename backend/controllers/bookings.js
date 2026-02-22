@@ -4,7 +4,7 @@ const Listing = require("../models/listing");
 module.exports.createBooking = async (req, res) => {
     try {
         const { listingId, startDate, endDate, totalPrice } = req.body;
-        const bookerId = req.auth.userId; // Clerk User ID
+        const bookerId = req.user.id; // JWT User ID
 
         const booking = new Booking({
             listing: listingId,
@@ -24,7 +24,7 @@ module.exports.createBooking = async (req, res) => {
 
 module.exports.getUserBookings = async (req, res) => {
     try {
-        const { userId } = req.auth;
+        const userId = req.user.id;
         const bookings = await Booking.find({ bookerId: userId }).populate("listing");
         res.status(200).json({ success: true, bookings });
     } catch (error) {

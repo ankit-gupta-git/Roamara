@@ -3,11 +3,23 @@ const Review = require("../models/review");
 const ExpressError = require("../utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("../schema.js");
 
+const jwt = require("jsonwebtoken");
+
 module.exports.authenticateToken = (req, res, next) => {
-    if (!req.auth || !req.auth.userId) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
         return res.status(401).json({ success: false, message: 'Access denied. Please sign in.' });
     }
-    next();
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(403).json({ success: false, message: 'Invalid or expired token.' });
+    }
 };
 
 module.exports.isOwner = async (req, res, next) => {
@@ -16,8 +28,8 @@ module.exports.isOwner = async (req, res, next) => {
     if (!listing) {
         return res.status(404).json({ success: false, message: "Listing not found" });
     }
-    // Check if the current user's Clerk ID matches the listing owner
-    if (listing.owner !== req.auth.userId) {
+    
+    if (listing.owner !== req.user.id) {
         return res.status(403).json({ success: false, message: "You are not the owner of this listing" });
     }
     next();
@@ -49,7 +61,7 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     if (!review) {
          return res.status(404).json({ success: false, message: "Review not found" });
     }
-    if (review.author !== req.auth.userId) {
+    if (review.author !== req.user.id) {
         return res.status(403).json({ success: false, message: "You are not the author of this review" });
     }
     next();

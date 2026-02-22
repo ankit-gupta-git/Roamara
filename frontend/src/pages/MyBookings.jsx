@@ -1,16 +1,14 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth } from "../context/AuthContext";
 import ListingCard from '../components/ListingCard';
 
 const MyBookings = () => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { getToken } = useAuth();
+    const { token } = useAuth();
 
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const token = await getToken();
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"}/api/bookings/user`, {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -27,8 +25,10 @@ const MyBookings = () => {
             }
         };
 
-        fetchBookings();
-    }, [getToken]);
+        if (token) {
+            fetchBookings();
+        }
+    }, [token]);
 
     if(loading) {
          return (
