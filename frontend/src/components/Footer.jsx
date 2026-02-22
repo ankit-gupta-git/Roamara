@@ -9,8 +9,12 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <div className="flex items-center mb-4">
-              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-full mr-3">
-                <i className="fa-regular fa-compass text-white text-xl"></i>
+              <div className="flex items-center justify-center w-12 h-12 bg-white rounded-full mr-3 overflow-hidden p-2">
+                <img 
+                  src="/airbnb-color-svgrepo-com.svg" 
+                  alt="Roamara Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-red-400 to-pink-400 bg-clip-text text-transparent">
                 Roamara
